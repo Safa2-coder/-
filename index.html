@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>متابعة تحدي صفاء - 5 أيام</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="hero-copy">
+        <p class="eyebrow">رفيقة صفا اليومية</p>
+        <h1>تحدي الصديق والعدو</h1>
+        <p class="hero-subtitle">خطة 5 أيام مرتبة حسب يومك، مائك، أكلك، وخطوتك الجاية.</p>
+      </div>
+      <div class="day-picker" aria-label="اختيار اليوم">
+        <button data-day="1" class="active">1</button>
+        <button data-day="2">2</button>
+        <button data-day="3">3</button>
+        <button data-day="4">4</button>
+        <button data-day="5">5</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel setup-panel">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">بداية اليوم</p>
+            <h2>نبدأ بهدوء</h2>
+          </div>
+          <button id="resetDay" class="ghost">تصفير اليوم</button>
+        </div>
+
+        <div class="grid two">
+          <label>
+            اسمك
+            <input id="nameInput" type="text" value="صفا" placeholder="صفا" />
+          </label>
+          <label>
+            وزنك بالكيلو
+            <input id="weightInput" type="number" min="20" max="250" placeholder="مثال: 70" />
+          </label>
+          <label>
+            موعد الاستيقاظ
+            <input id="wakeInput" type="time" value="07:00" />
+          </label>
+          <label>
+            موعد النوم
+            <input id="bedInput" type="time" value="22:00" />
+          </label>
+        </div>
+
+        <div class="water-card">
+          <div>
+            <span class="label">الماء المطلوب اليوم</span>
+            <strong id="waterTarget">ادخلي وزنك</strong>
+          </div>
+          <div class="water-actions">
+            <button id="minusWater" aria-label="إنقاص كوب">-</button>
+            <span id="waterCount">0</span>
+            <button id="plusWater" aria-label="إضافة كوب">+</button>
+          </div>
+        </div>
+
+        <label>
+          شو الموجود عندك اليوم؟
+          <textarea id="foodInput" rows="4" placeholder="مثال: بيض، دجاج، خيار، خس، أفوكادو، زيت زيتون، مخلل..."></textarea>
+        </label>
+
+        <button id="buildPlate" class="primary">جهزي لي فطوري وغداي وعشاي</button>
+
+        <div class="meal-photo-groups">
+          <div class="meal-photo-card">
+            <div class="meal-photo-header">
+              <strong>الفطور</strong>
+              <button class="ghost meal-photo-button" data-meal="breakfast" type="button">إضافة صورة</button>
+            </div>
+            <input id="breakfastPhotoInput" data-meal="breakfast" type="file" accept="image/*" hidden />
+            <div class="meal-photo-list" data-preview="breakfast" aria-live="polite"></div>
+          </div>
+
+          <div class="meal-photo-card">
+            <div class="meal-photo-header">
+              <strong>الغداء</strong>
+              <button class="ghost meal-photo-button" data-meal="lunch" type="button">إضافة صورة</button>
+            </div>
+            <input id="lunchPhotoInput" data-meal="lunch" type="file" accept="image/*" hidden />
+            <div class="meal-photo-list" data-preview="lunch" aria-live="polite"></div>
+          </div>
+
+          <div class="meal-photo-card">
+            <div class="meal-photo-header">
+              <strong>العشاء</strong>
+              <button class="ghost meal-photo-button" data-meal="dinner" type="button">إضافة صورة</button>
+            </div>
+            <input id="dinnerPhotoInput" data-meal="dinner" type="file" accept="image/*" hidden />
+            <div class="meal-photo-list" data-preview="dinner" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div id="plateResult" class="plate-result" aria-live="polite"></div>
+      </section>
+
+      <section class="panel progress-panel">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">الإنجاز</p>
+            <h2>وين وصلنا؟</h2>
+          </div>
+          <div class="score">
+            <span id="progressPercent">0%</span>
+            <small>من مهام اليوم</small>
+          </div>
+        </div>
+        <div class="progress-bar"><span id="progressFill"></span></div>
+        <div class="summary-row">
+          <div><strong id="doneCount">0</strong><span>تم إنجازه</span></div>
+          <div><strong id="remainingCount">0</strong><span>متبقي</span></div>
+          <div><strong id="currentTask">-</strong><span>المطلوب الآن</span></div>
+        </div>
+        <div id="nextStepBox" class="next-step"></div>
+      </section>
+
+      <section class="panel schedule-panel">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">بالساعات</p>
+            <h2>خطوات اليوم</h2>
+          </div>
+          <button id="copyReport" class="ghost">تقرير آخر اليوم</button>
+        </div>
+        <div id="taskList" class="task-list"></div>
+      </section>
+
+      <section class="panel notes-panel">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">تسجيل سريع</p>
+            <h2>شو صار معك؟</h2>
+          </div>
+        </div>
+        <div class="grid two">
+          <label>
+            الطاقة اليوم
+            <select id="energyInput">
+              <option>جيدة</option>
+              <option>متوسطة</option>
+              <option>منخفضة</option>
+            </select>
+          </label>
+          <label>
+            النوم أمس
+            <select id="sleepInput">
+              <option>جيد</option>
+              <option>متقطع</option>
+              <option>قليل</option>
+            </select>
+          </label>
+        </div>
+        <label>
+          مشروبات شربتيها غير الماء
+          <textarea id="drinksInput" rows="3" placeholder="مثال: نعناع، يانسون، ماء مع ليمون، عصير أخضر..."></textarea>
+        </label>
+        <div class="week-green-juice">
+          <div class="week-green-juice-header">
+            <strong>مشروب أخضر للأسبوع</strong>
+          </div>
+          <div class="green-juice-week-grid">
+            <label>
+              اليوم 1
+              <textarea id="greenJuiceDay1" rows="2" placeholder="مثال: كرفس + سبانخ + زنجبيل + ليمون"></textarea>
+            </label>
+            <label>
+              اليوم 2
+              <textarea id="greenJuiceDay2" rows="2" placeholder="مثال: خيار + كرفس + تفاح أخضر"></textarea>
+            </label>
+            <label>
+              اليوم 3
+              <textarea id="greenJuiceDay3" rows="2" placeholder="مثال: بروكلي + كرفس + ليمون"></textarea>
+            </label>
+            <label>
+              اليوم 4
+              <textarea id="greenJuiceDay4" rows="2" placeholder="مثال: سبانخ + زنجبيل + خيار"></textarea>
+            </label>
+            <label>
+              اليوم 5
+              <textarea id="greenJuiceDay5" rows="2" placeholder="مثال: كرفس + بارية + تفاح أخضر"></textarea>
+            </label>
+          </div>
+        </div>
+        <label>
+          إضافة خاصة للعصير الأخضر
+          <textarea id="greenJuiceExtraInput" rows="3" placeholder="مثال: نصف تفاحة خضراء، شريحة زنجبيل، رشة قرفة، عصير ليمون..."></textarea>
+        </label>
+        <label>
+          إضافات أو أشياء طبقتيها
+          <textarea id="extrasInput" rows="3" placeholder="مثال: خل التفاح، نقع القدمين، مشي حافية، تنفس عميق..."></textarea>
+        </label>
+        <label>
+          ملاحظاتك
+          <textarea id="notesInput" rows="5" placeholder="صداع، دوخة، جوع، إنجازات، صعوبات..."></textarea>
+        </label>
+        <div class="report-actions">
+          <button id="downloadPdf" class="primary">تنزيل تقرير PDF</button>
+        </div>
+        <div id="reportBox" class="report-box"></div>
+      </section>
+
+      <section class="panel food-panel">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">مرجع سريع</p>
+            <h2>صديق وعدو</h2>
+          </div>
+        </div>
+        <div class="food-columns">
+          <div>
+            <h3>أطعمة صديقة</h3>
+            <p>دجاج، سمك، بيض، لحوم، كبدة، خضار، أفوكادو، زيت زيتون، زيت جوز الهند، مخلل أو مخمر، مرق، فواكه مسموحة مثل التفاح الأخضر والفراولة والليمون.</p>
+          </div>
+          <div>
+            <h3>أطعمة عدو</h3>
+            <p>الأرز، الخبز الأبيض أو الأسمر، الكيك، المعجنات، الحلويات، البقوليات، البطاطا، الجلوتين، الكازيين، مشتقات الحليب، الزيوت المهدرجة، السكر، النشا والمواد الحافظة.</p>
+          </div>
+      </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
